@@ -1,0 +1,65 @@
+-- Task 4
+SELECT * FROM Customers;
+SELECT c.FirstName, c.LastName, c.OrderCount
+FROM Customers c 
+LEFT JOIN Orders ON c.CustomerId = Orders.CustomerId 
+WHERE c.OrderCount IS NULL;
+
+SELECT COUNT(*) AS total_products 
+FROM Products;
+
+SELECT SUM(od.Quantity * p.Price) AS total_revenue 
+FROM OrderDetails od 
+JOIN Products p ON od.ProductId = p.ProductId;
+
+SELECT * FROM Products;
+
+SELECT AVG(od.Quantity) AS average_quantity 
+FROM OrderDetails od 
+JOIN Products p ON od.ProductId = p.ProductId 
+WHERE p.ProductType = 'Electronics'; 
+
+SELECT SUM(od.Quantity * p.Price) AS total_revenue 
+FROM Orders o 
+JOIN OrderDetails od ON o.OrderId = od.OrderId 
+JOIN Products p ON od.ProductId = p.ProductId 
+WHERE o.CustomerId = 2; 
+
+SELECT * FROM Customers;
+SELECT c.FirstName, c.LastName, MAX(c.OrderCount) AS order_count 
+FROM Customers c 
+JOIN Orders o ON c.CustomerId = o.CustomerId 
+GROUP BY c.CustomerId;
+
+SELECT p.ProductType, SUM(od.Quantity) AS total_quantity 
+FROM OrderDetails od 
+JOIN Products p ON od.ProductId = p.ProductId 
+GROUP BY p.ProductType
+ORDER BY total_quantity DESC 
+LIMIT 1;
+
+SELECT c.FirstName, c.LastName, SUM(od.Quantity * p.Price) AS total_spent 
+FROM Customers c 
+JOIN Orders o ON c.CustomerId = o.CustomerId 
+JOIN OrderDetails od ON o.OrderId = od.OrderId 
+JOIN Products p ON od.ProductId = p.ProductId 
+WHERE p.ProductType = 'Electronics' 
+GROUP BY c.CustomerId 
+ORDER BY total_spent DESC 
+LIMIT 1;
+
+SELECT c.FirstName, c.LastName, AVG(od.total) AS avg_order_value 
+FROM Orders o 
+JOIN (
+    SELECT od.OrderId, SUM(od.Quantity * p.Price) AS total 
+    FROM OrderDetails od 
+    JOIN Products p ON od.ProductId = p.ProductId 
+    GROUP BY od.OrderId
+) od ON o.OrderId = od.OrderId 
+JOIN Customers c ON o.CustomerId = c.CustomerId 
+GROUP BY c.CustomerId;
+
+SELECT c.FirstName, c.LastName, COUNT(o.OrderId) AS order_count 
+FROM Customers c 
+JOIN Orders o ON c.CustomerId = o.CustomerId 
+GROUP BY c.CustomerId;
