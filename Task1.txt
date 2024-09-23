@@ -1,0 +1,154 @@
+CREATE DATABASE TechShop;
+USE TechShop;
+CREATE TABLE Customers (
+	CustomerId INT PRIMARY KEY,
+    FirstName VARCHAR(10),
+    LastName VARCHAR(10),
+    Email VARCHAR(50),
+    Phone VARCHAR(10),
+    Address VARCHAR(20)
+);
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(100),
+    Description TEXT,
+    Price DECIMAL(10, 3)
+);
+CREATE TABLE Orders (
+    OrderID INT PRIMARY KEY,
+    CustomerID INT,
+    OrderDate DATE,
+    TotalAmount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerId) REFERENCES Customers(CustomerId)
+);
+CREATE TABLE OrderDetails (
+    OrderDetailID INT PRIMARY KEY,
+    OrderID INT,
+    ProductID INT,
+    Quantity INT,
+    FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+CREATE TABLE Inventory (
+    InventoryID INT PRIMARY KEY,
+    ProductID INT,
+    QuantityInStock INT,
+    LastStockUpdate DATE,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID)
+);
+
+INSERT INTO Customers (CustomerId, FirstName, LastName, Email, Phone, Address) VALUES
+(1, 'Jake', 'Doe', 'jake.doe@example.com', '123456789', 'Jayanagar'),
+(2, 'Lisbon', 'Smith', 'lisbon.smith@example.com', '234567895', 'Uttarhalli'),
+(3, 'Racheal', 'Greene', 'racheal.greene@example.com', '34567890', 'Bank Colony'),
+(4, 'Emily', 'Davis', 'emily.davis@example.com', '456329012', 'JP Nagar'),
+(5, 'Robert', 'Brown', 'robert.brown@example.com', '577890123', 'Indiranagar'),
+(6, 'Alice', 'Jones', 'alice.jones@example.com', '678909034', 'Marathalli'),
+(7, 'James', 'Garcia', 'james.garcia@example.com', '789012345', 'Whitefield'),
+(8, 'Henry', 'Miller', 'henry.miller@example.com', '889123456', 'Electronic city'),
+(9, 'David', 'Bloom', 'david.bloom@example.com', '901234567', 'DVG Road'),
+(10, 'Karen', 'Gillan', 'karen.gillan@example.com', '098234567', 'RR Nagar');
+
+INSERT INTO Products (ProductID, ProductName, Description, Price) VALUES
+(1, 'Smartphone', 'Latest smartphone with 128GB storage', 80000.00),
+(2, 'Laptop', '15-inch laptop with 16GB RAM', 70000.00),
+(3, 'Tablet', '10-inch tablet with 64GB storage', 50000.99),
+(4, 'Smartwatch', 'Smartwatch with heart rate monitor', 3000.99),
+(5, 'Headphones', 'Wireless noise-cancelling headphones', 6000.99),
+(6, 'Bluetooth Speaker', 'Portable Bluetooth speaker with 10-hour battery', 7000.99),
+(7, 'Keyboard', 'Mechanical keyboard with backlight', 1000.99),
+(8, 'Monitor', '27-inch 4K monitor', 50000.99),
+(9, 'Mouse', 'Wireless mouse with ergonomic design', 2000.99),
+(10, 'Hard Drive', '1TB external hard drive', 2500.99);
+
+INSERT INTO Orders (OrderID, CustomerId, OrderDate, TotalAmount) VALUES
+(1, 1, '2024-01-15', 2000.98),
+(2, 2, '2024-02-20', 4000.98),
+(3, 3, '2023-03-10', 8000.98),
+(4, 4, '2023-03-25', 4599.98),
+(5, 5, '2024-04-05', 7578.98),
+(6, 6, '2023-04-18', 27899.98),
+(7, 7, '2024-05-03', 7890.99),
+(8, 8, '2024-05-15', 77569.98),
+(9, 9, '2024-06-10', 169349.99),
+(10, 10, '2024-06-20', 2398.98);
+
+INSERT INTO OrderDetails (OrderDetailID, OrderID, ProductID, Quantity) VALUES
+(1, 1, 2, 1),   
+(2, 1, 5, 3),   
+(3, 2, 1, 2),   
+(4, 2, 6, 2),   
+(5, 3, 4, 4),   
+(6, 4, 8, 1),   
+(7, 4, 7, 1),   
+(8, 5, 2, 2),   
+(9, 5, 3, 2),   
+(10, 6, 10, 2); 
+
+INSERT INTO Inventory (InventoryID, ProductID, QuantityInStock, LastStockUpdate) VALUES
+(1, 1, 53, '2024-01-01'),
+(2, 2, 45, '2024-01-01'),
+(3, 3, 70, '2024-01-01'),
+(4, 4, 75, '2024-01-01'),
+(5, 5, 20, '2024-01-01'),
+(6, 6, 10, '2024-01-01'),
+(7, 7, 300, '2024-01-01'),
+(8, 8, 400, '2024-01-01'),
+(9, 9, 50, '2024-01-01'),
+(10, 10, 60, '2024-01-01');
+
+SELECT * FROM Customers;
+
+USE TechShop;
+
+SELECT FirstName, LastName, Email FROM Customers;
+
+SELECT Orders.OrderID, Orders.OrderDate, Customers.FirstName, Customers.LastName
+FROM Orders
+JOIN Customers ON Orders.CustomerId=Customers.CustomerId;
+
+INSERT INTO Customers(CustomerId, FirstName, LastName, Email, Phone, Address) 
+VALUES('11', 'Phil', 'Dunphy', 'phil@gmail.com', '723687632', 'Mysore');
+
+UPDATE Products
+SET Price ='Price * 1.1';
+
+DELETE FROM OrderDetails
+WHERE OrderID=10;
+DELETE FROM Orders
+WHERE OrderID=10;
+
+INSERT INTO Customers(CustomerId, FirstName, LastName, Email, Phone, Address) 
+VALUES('12', 'Claire', 'Dunphy', 'claire@gmail.com', '723087632', 'Mangalore');
+INSERT INTO Orders(OrderID, CustomerId, OrderDate, TotalAmount)
+VALUES ('12', '12', '2024-09-19', '8765.00');
+
+UPDATE Customers
+SET Email='claire.dunphy@gmail.com', Address='Mysore'
+WHERE CustomerId=12;
+
+INSERT INTO Products(ProductID, ProductName, Description, Price)
+VALUES('12', 'Charger', 'A fast charger with 15 watts', '900.99');
+
+UPDATE Orders
+SET OrderStatus='Shipped'
+WHERE OrderID=9;
+
+SET SQL_SAFE_UPDATES = 0;
+UPDATE Products
+SET Price =Price * 1.10;
+
+USE TechShop;
+
+ALTER TABLE Customers
+ADD OrderCount INT DEFAULT 0;
+SET SQL_SAFE_UPDATES = 0;
+UPDATE Customers
+SET OrderCount=(
+SELECT COUNT(*)
+FROM Orders
+WHERE Orders.CustomerId=Customers.CustomerId);
+SELECT * FROM Customers;
+UPDATE Customers
+SET OrderCount='2'
+WHERE CustomerId=5;
